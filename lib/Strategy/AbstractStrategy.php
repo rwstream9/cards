@@ -3,10 +3,15 @@
 
 	namespace Cards\Strategy;
 	
+	use Exception;
+	
 	
 	abstract class AbstractStrategy implements StrategyInterface
 	{
+		const DELIMITER = '|';
+		
 		private $hash;
+		private $unorderedHash;
 		
 		
 		public function getHash ()
@@ -15,12 +20,56 @@
 				return $this->hash;
 			}
 			
-			$sequenceString = '';
+			$cards = $this->generate();
 			
-			foreach ($this->generate() as $card) {
-				$sequenceString .= $card . '|';
+			return $this->hash = $this->hashArray($cards);
+		}
+		
+		
+		public function getUnorderedHash ()
+		{
+			if ($this->unorderedHash) {
+				return $this->unorderedHash;
 			}
 			
-			return $this->hash = sha1($sequenceString);
+			$cards = $this->generate();
+			$cardArray = [];
+			
+			foreach ($cards as $card) {
+				$cardArray[] = (string) $card;
+			}
+			
+			$cardArray = $this->rotateArray($cardArray, 'As');
+			
+			return $this->unorderedHash = $this->hashArray($cardArray);
+		}
+		
+		
+		private function hashArray ($array)
+		{
+			$sequenceString = '';
+			
+			foreach ($array as $item) {
+				$sequenceString .= (string) $item . self::DELIMITER;
+			}
+			
+			return sha1($sequenceString);
+		}
+		
+		
+		private function rotateArray ($array, $firstValue)
+		{
+			$key = array_search($firstValue, $array);
+			
+			if ($key === false) {
+				throw new Exception('Rotate value ' . $firstValue . ' not found.');
+			}
+			
+			for ($i = 0; $i < $key; $i++) {
+				$value = array_shift($array);
+				array_push($array, $value);
+			}
+			
+			return $array;
 		}
 	}

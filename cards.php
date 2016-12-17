@@ -18,5 +18,6 @@
 	}
 	
 	echo $strategy->getHash() . PHP_EOL;
+	echo $strategy->getUnorderedHash() . PHP_EOL;
 
 	

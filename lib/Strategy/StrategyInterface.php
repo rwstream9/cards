@@ -10,4 +10,5 @@
 		
 		public function generate ();
 		public function getHash ();
+		public function getUnorderedHash ();
 	}
