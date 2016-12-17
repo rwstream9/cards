@@ -31,7 +31,7 @@
 				$card = $this->next($card);
 			}
 			
-			return new Deck($cards);
+			return new Deck($cards, $this->spec->getDeckHasher());
 		}
 		
 		

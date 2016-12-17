@@ -7,6 +7,8 @@
 	
 	class Spec
 	{
+		protected $deckHasher;
+		
 		protected $ranks;
 		protected $suits;
 		
@@ -16,7 +18,7 @@
 		private $suitValueIndex;
 		
 		
-		public function __construct (array $rankMap, array $suitMap)
+		public function __construct (array $rankMap, array $suitMap, DeckHasher $deckHasher = null)
 		{
 			$this->ranks = $this->createRanks($rankMap);
 			$this->suits = $this->createSuits($suitMap);
@@ -25,6 +27,20 @@
 			$this->createRankValueIndex();
 			$this->createSuitSymbolIndex();
 			$this->createSuitValueIndex();
+			
+			$this->deckHasher = $deckHasher ?: new DeckHasher($this);
+		}
+		
+		
+		public function getDeckHasher()
+		{
+			return $this->deckHasher;
+		}
+		
+		
+		public function createCard (Rank $rank, Suit $suit)
+		{	
+			return new Card($rank, $suit);
 		}
 		
 		
@@ -41,7 +57,7 @@
 				throw new Exception('Invalid suit symbol: ' . $suitSymbol);
 			}
 			
-			return new Card($rank, $suit);
+			return $this->createCard($rank, $suit);
 		}
 		
 		
@@ -58,7 +74,19 @@
 				throw new Exception('Invalid suit value: ' . $suitValue);
 			}
 			
-			return new Card($rank, $suit);
+			return $this->createCard($rank, $suit);
+		}
+		
+		
+		public function getRanks ()
+		{
+			return $this->ranks;
+		}
+		
+		
+		public function getSuits ()
+		{
+			return $this->suits;
 		}
 		
 		

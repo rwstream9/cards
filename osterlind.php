@@ -19,6 +19,6 @@
 	}
 	
 	echo $deck->getHash() . PHP_EOL;
-	echo $deck->getUnorderedHash() . PHP_EOL;
+	echo $deck->getRotatedHash() . PHP_EOL;
 
 	

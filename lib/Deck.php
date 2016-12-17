@@ -9,17 +9,17 @@
 	
 	class Deck implements Iterator
 	{
-		const DELIMITER = '|';
-		
 		protected $cards;
 		
+		private $hasher;
 		private $hash;
 		private $unorderedHash;
 		
 		
-		public function __construct (array $cards)
+		public function __construct (array $cards, DeckHasher $hasher)
 		{
 			$this->cards = $cards;
+			$this->hasher = $hasher;
 			
 			$this->validate();
 		}
@@ -61,54 +61,17 @@
 				return $this->hash;
 			}
 			
-			return $this->hash = $this->hashArray($this->cards);
+			return $this->hash = $this->hasher->hash($this);
 		}
 		
 		
-		public function getUnorderedHash ()
+		public function getRotatedHash ()
 		{
 			if ($this->unorderedHash) {
 				return $this->unorderedHash;
 			}
 			
-			$cardArray = [];
-			
-			foreach ($this->cards as $card) {
-				$cardArray[] = (string) $card;
-			}
-			
-			$cardArray = $this->rotateArray($cardArray, 'As');
-			
-			return $this->unorderedHash = $this->hashArray($cardArray);
-		}
-		
-		
-		private function hashArray ($array)
-		{
-			$sequenceString = '';
-			
-			foreach ($array as $item) {
-				$sequenceString .= (string) $item . self::DELIMITER;
-			}
-			
-			return sha1($sequenceString);
-		}
-		
-		
-		private function rotateArray ($array, $firstValue)
-		{
-			$key = array_search($firstValue, $array);
-			
-			if ($key === false) {
-				throw new Exception('Rotate value ' . $firstValue . ' not found.');
-			}
-			
-			for ($i = 0; $i < $key; $i++) {
-				$value = array_shift($array);
-				array_push($array, $value);
-			}
-			
-			return $array;
+			return $this->unorderedHash = $this->hasher->hashRotated($this);
 		}
 		
 		
