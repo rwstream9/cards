@@ -1,7 +1,7 @@
 <?php
 
 
-	namespace Cards\Strategy;
+	namespace Cards;
 	
 	
 	interface StrategyInterface

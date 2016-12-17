@@ -2,7 +2,7 @@
 
 	require_once(__DIR__ . '/vendor/autoload.php');
 
-	$spec = new Cards\Spec;
+	$spec = new Cards\Osterlind\OsterlindSpec;
 
 	$cardSymbols = str_split($argv[1]);
 
@@ -11,7 +11,7 @@
 
 	$card = $spec->createCardFromSymbols($rankSymbol, $suitSymbol);
 	
-	$strategy = new Cards\Strategy\OsterlindStrategy($spec, $card);
+	$strategy = new Cards\Osterlind\OsterlindStrategy($spec, $card);
 	$deck = $strategy->generate();
 	
 	foreach ($deck as $i => $card) {

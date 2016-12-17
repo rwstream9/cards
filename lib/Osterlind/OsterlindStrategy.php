@@ -1,11 +1,12 @@
 <?php
 
 
-	namespace Cards\Strategy;
+	namespace Cards\Osterlind;
 	
 	use Cards\Card;
 	use Cards\Spec;
 	use Cards\Deck;
+	use Cards\StrategyInterface;
 	
 	
 	class OsterlindStrategy implements StrategyInterface
@@ -53,10 +54,13 @@
 	
 			if (in_array($nextRankValue, [1, 2, 3])) {
 				$nextSuitValue = $suitValue;
+				
 			} else if (in_array($nextRankValue, [4, 5, 6])) {
 				$nextSuitValue = $suitValue + 2;
+				
 			} else if (in_array($nextRankValue, [7, 8, 9])) {
 				$nextSuitValue = $suitValue - 1;
+				
 			} else if (in_array($nextRankValue, [10, 11, 12, 13])) {
 	            $nextSuitValue = $suitValue + 1;
 			}

@@ -16,10 +16,10 @@
 		private $suitValueIndex;
 		
 		
-		public function __construct ()
+		public function __construct (array $rankMap, array $suitMap)
 		{
-			$this->ranks = $this->createRanks();
-			$this->suits = $this->createSuits();
+			$this->ranks = $this->createRanks($rankMap);
+			$this->suits = $this->createSuits($suitMap);
 			
 			$this->createRankSymbolIndex();
 			$this->createRankValueIndex();
@@ -118,33 +118,26 @@
 		}
 		
 		
-		private function createRanks ()
+		private function createRanks ($rankMap)
 		{
-			return [
-				new Rank('A', 1),
-				new Rank('2', 2),
-				new Rank('3', 3),
-				new Rank('4', 4),
-				new Rank('5', 5),
-				new Rank('6', 6),
-				new Rank('7', 7),
-				new Rank('8', 8),
-				new Rank('9', 9),
-				new Rank('T', 10),
-				new Rank('J', 11),
-				new Rank('Q', 12),
-				new Rank('K', 13),
-			];
+			$ranks = [];
+			
+			foreach ($rankMap as $symbol => $value) {
+				$ranks[] = new Rank($symbol, $value);
+			}
+			
+			return $ranks;
 		}
 		
 		
-		private function createSuits ()
+		private function createSuits ($suitMap)
 		{
-			return [
-				new Suit('s', 1),
-				new Suit('h', 2),
-				new Suit('c', 3),
-				new Suit('d', 4),
-			];
+			$suits = [];
+			
+			foreach ($suitMap as $symbol => $value) {
+				$suits[] = new Suit($symbol, $value);
+			}
+			
+			return $suits;
 		}
 	}
