@@ -25,33 +25,39 @@
 		}
 		
 		
-		function rewind() 
+		function rewind () 
 		{
 			reset($this->cards);
 		}
 		
 		
-		function current() 
+		function current () 
 		{
 			return current($this->cards);
 		}
 		
 		
-		function key() 
+		function key () 
 		{
 			return key($this->cards);
 		}
 		
 		
-		function next() 
+		function next () 
 		{
-			return next($this->cards);
+			next($this->cards);
 		}
 		
 		
-		function valid() 
+		function valid () 
 		{
 			return key($this->cards) !== null;
+		}
+		
+		
+		public function toArray ()
+		{
+			return $this->cards;
 		}
 		
 		
