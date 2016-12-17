@@ -1,150 +1,139 @@
 <?php
 
+
 	namespace Cards;
 	
+	use Iterator;
 	use Exception;
 	
 	
-	class Deck
+	class Deck implements Iterator
 	{
-		protected $ranks;
-		protected $suits;
+		const DELIMITER = '|';
 		
-		private $rankSymbolIndex;
-		private $rankValueIndex;
-		private $suitSymbolIndex;
-		private $suitValueIndex;
+		protected $cards;
+		
+		private $hash;
+		private $unorderedHash;
 		
 		
-		public function __construct ()
+		public function __construct (array $cards)
 		{
-			$this->ranks = $this->createRanks();
-			$this->suits = $this->createSuits();
+			$this->cards = $cards;
 			
-			$this->createRankSymbolIndex();
-			$this->createRankValueIndex();
-			$this->createSuitSymbolIndex();
-			$this->createSuitValueIndex();
+			$this->validate();
 		}
 		
 		
-		public function createCardFromSymbols ($rankSymbol, $suitSymbol)
+		function rewind() 
 		{
-			$rank = $this->getRankBySymbol($rankSymbol);
-			$suit = $this->getSuitBySymbol($suitSymbol);
-			
-			if (! $rank) {
-				throw new Exception('Invalid rank symbol: ' . $rankSymbol);
+			reset($this->cards);
+		}
+		
+		
+		function current() 
+		{
+			return current($this->cards);
+		}
+		
+		
+		function key() 
+		{
+			return key($this->cards);
+		}
+		
+		
+		function next() 
+		{
+			return next($this->cards);
+		}
+		
+		
+		function valid() 
+		{
+			return key($this->cards) !== null;
+		}
+		
+		
+		public function getHash ()
+		{
+			if ($this->hash) {
+				return $this->hash;
 			}
 			
-			if (! $suit) {
-				throw new Exception('Invalid suit symbol: ' . $suitSymbol);
+			return $this->hash = $this->hashArray($this->cards);
+		}
+		
+		
+		public function getUnorderedHash ()
+		{
+			if ($this->unorderedHash) {
+				return $this->unorderedHash;
 			}
 			
-			return new Card($rank, $suit);
-		}
-		
-		
-		public function createCardFromValues ($rankValue, $suitValue)
-		{
-			$rank = $this->getRankByValue($rankValue);
-			$suit = $this->getSuitByValue($suitValue);
+			$cardArray = [];
 			
-			if (! $rank) {
-				throw new Exception('Invalid rank value: ' . $rankValue);
+			foreach ($this->cards as $card) {
+				$cardArray[] = (string) $card;
 			}
 			
-			if (! $suit) {
-				throw new Exception('Invalid suit value: ' . $suitValue);
+			$cardArray = $this->rotateArray($cardArray, 'As');
+			
+			return $this->unorderedHash = $this->hashArray($cardArray);
+		}
+		
+		
+		private function hashArray ($array)
+		{
+			$sequenceString = '';
+			
+			foreach ($array as $item) {
+				$sequenceString .= (string) $item . self::DELIMITER;
 			}
 			
-			return new Card($rank, $suit);
+			return sha1($sequenceString);
 		}
 		
 		
-		public function getRankByValue ($value)
+		private function rotateArray ($array, $firstValue)
 		{
-			return $this->rankValueIndex[$value];
+			$key = array_search($firstValue, $array);
+			
+			if ($key === false) {
+				throw new Exception('Rotate value ' . $firstValue . ' not found.');
+			}
+			
+			for ($i = 0; $i < $key; $i++) {
+				$value = array_shift($array);
+				array_push($array, $value);
+			}
+			
+			return $array;
 		}
 		
 		
-		public function getRankBySymbol ($symbol)
+		private function validate ()
 		{
-			return $this->rankSymbolIndex[$symbol];
-		}
-		
-		
-		public function getSuitByValue ($value)
-		{
-			return $this->suitValueIndex[$value];
-		}
-		
-		
-		public function getSuitBySymbol ($symbol)
-		{
-			return $this->suitSymbolIndex[$symbol];
-		}
-		
-		
-		private function createRankSymbolIndex ()
-		{
-			foreach ($this->ranks as $rank) {
-				$this->rankSymbolIndex[$rank->getSymbol()] = $rank;
+			if (count($this->cards) != 52) {
+				throw new Exception('Each Deck must have 52 cards.');
+			}
+			
+			$cardSymbols = $this->getCardSymbols();
+			
+			if (count(array_unique($cardSymbols)) != 52) {
+				throw new Exception('The deck must not contain duplicate cards.');
 			}
 		}
 		
 		
-		private function createRankValueIndex ()
+		private function getCardSymbols ()
 		{
-			foreach ($this->ranks as $rank) {
-				$this->rankValueIndex[$rank->getValue()] = $rank;
+			$symbols = [];
+			
+			foreach ($this->cards as $card) {
+				$symbols[] = (string) $card;
 			}
-		}
-		
-		
-		private function createSuitSymbolIndex ()
-		{
-			foreach ($this->suits as $suit) {
-				$this->suitSymbolIndex[$suit->getSymbol()] = $suit;
-			}
-		}
-		
-		
-		private function createSuitValueIndex ()
-		{
-			foreach ($this->suits as $suit) {
-				$this->suitValueIndex[$suit->getValue()] = $suit;
-			}
-		}
-		
-		
-		private function createRanks ()
-		{
-			return [
-				new Rank('A', 1),
-				new Rank('2', 2),
-				new Rank('3', 3),
-				new Rank('4', 4),
-				new Rank('5', 5),
-				new Rank('6', 6),
-				new Rank('7', 7),
-				new Rank('8', 8),
-				new Rank('9', 9),
-				new Rank('T', 10),
-				new Rank('J', 11),
-				new Rank('Q', 12),
-				new Rank('K', 13),
-			];
-		}
-		
-		
-		private function createSuits ()
-		{
-			return [
-				new Suit('s', 1),
-				new Suit('h', 2),
-				new Suit('c', 3),
-				new Suit('d', 4),
-			];
+			
+			return $symbols;
 		}
 	}

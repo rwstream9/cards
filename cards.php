@@ -2,22 +2,23 @@
 
 	require_once(__DIR__ . '/vendor/autoload.php');
 
-	$deck = new Cards\Deck;
+	$spec = new Cards\Spec;
 
 	$cardSymbols = str_split($argv[1]);
 
 	$rankSymbol = $cardSymbols[0];
 	$suitSymbol = $cardSymbols[1];
 
-	$card = $deck->createCardFromSymbols($rankSymbol, $suitSymbol);
+	$card = $spec->createCardFromSymbols($rankSymbol, $suitSymbol);
 	
-	$strategy = new Cards\Strategy\OsterlindStrategy($deck, $card);
+	$strategy = new Cards\Strategy\OsterlindStrategy($spec, $card);
+	$deck = $strategy->generate();
 	
-	foreach ($strategy->generate() as $i => $card) {
+	foreach ($deck as $i => $card) {
 		echo ($i + 1) . '. ' . $card . PHP_EOL;
 	}
 	
-	echo $strategy->getHash() . PHP_EOL;
-	echo $strategy->getUnorderedHash() . PHP_EOL;
+	echo $deck->getHash() . PHP_EOL;
+	echo $deck->getUnorderedHash() . PHP_EOL;
 
 	

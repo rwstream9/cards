@@ -4,18 +4,19 @@
 	namespace Cards\Strategy;
 	
 	use Cards\Card;
+	use Cards\Spec;
 	use Cards\Deck;
 	
 	
-	class OsterlindStrategy extends AbstractStrategy implements StrategyInterface
+	class OsterlindStrategy implements StrategyInterface
 	{
 		private $firstCard;
-		private $deck;
+		private $spec;
 		
 		
-		public function __construct (Deck $deck, Card $firstCard)
+		public function __construct (Spec $spec, Card $firstCard)
 		{
-			$this->deck = $deck;
+			$this->spec = $spec;
 			$this->firstCard = $firstCard;
 		}
 		
@@ -29,7 +30,7 @@
 				$card = $this->next($card);
 			}
 			
-			return $cards;
+			return new Deck($cards);
 		}
 		
 		
@@ -66,6 +67,6 @@
 				$nextSuitValue = 4 + $nextSuitValue;
 			}
 			
-			return $this->deck->createCardFromValues($nextRankValue, $nextSuitValue);
+			return $this->spec->createCardFromValues($nextRankValue, $nextSuitValue);
 		}
 	}
