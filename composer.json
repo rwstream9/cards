@@ -1,0 +1,13 @@
+{
+    "name": "ryanwilliams/cards",
+    "authors": [
+        {
+            "name": "Ryan Williams",
+            "email": "rwilliams@stream9.net"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {"Cards\\": "lib/"}
+    }
+}
