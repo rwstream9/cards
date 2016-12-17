@@ -40,7 +40,34 @@
 		
 		public function createCard (Rank $rank, Suit $suit)
 		{	
-			return new Card($rank, $suit);
+			$card = new Card($rank, $suit);
+			
+			$matchedRank = null;
+			$matchedSuit = null;
+			
+			foreach ($this->getRanks() as $currentRank) {
+				if ($this->compareAttributes($rank, $currentRank)) {
+					$matchedRank = $rank;
+					break;
+				}
+			}
+			
+			if (! $matchedRank) {
+				throw new Exception('Invalid rank: ' . $rank);
+			}
+			
+			foreach ($this->getSuits() as $currentSuit) {
+				if ($this->compareAttributes($suit, $currentSuit)) {
+					$matchedSuit = $suit;
+					break;
+				}
+			}
+			
+			if (! $matchedSuit) {
+				throw new Exception('Invalid suit: ' . $suit);
+			}
+			
+			return $card;
 		}
 		
 		
@@ -111,6 +138,13 @@
 		public function getSuitBySymbol ($symbol)
 		{
 			return $this->suitSymbolIndex[$symbol];
+		}
+		
+		
+		public function compareAttributes (Attribute $left, Attribute $right)
+		{
+			return $left->getSymbol() == $right->getSymbol()
+				&& $left->getValue() == $right->getValue();
 		}
 		
 		
