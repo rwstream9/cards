@@ -1,5 +1,13 @@
 <?php
 
+	/*
+		Credit to Richard Osterlind for this algorithm
+		
+		His fascinating book can be found here: 
+		
+		http://vincent.mucchielli.free.fr/PUA/Skills/Magic%20and%20Card%20Tricks/Richard%20Osterlind/The%20Breakthrough%20Card%20System.pdf
+	*/
+
 
 	namespace Cards\Osterlind;
 	
