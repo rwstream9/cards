@@ -3,6 +3,7 @@
 	namespace Cards;
 	
 	use Exception;
+	use Cards\Deck;
 	
 	
 	class Spec
@@ -102,6 +103,12 @@
 			}
 			
 			return $this->createCard($rank, $suit);
+		}
+		
+		
+		public function createDeck (array $cards)
+		{
+			return new Deck($cards, $this->getDeckHasher());
 		}
 		
 		

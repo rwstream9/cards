@@ -29,6 +29,6 @@
 				}
 			}
 			
-			return new Deck($cards, $this->spec->getDeckHasher());
+			return $this->spec->createDeck($cards);
 		}
 	}

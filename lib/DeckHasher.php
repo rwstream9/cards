@@ -12,12 +12,6 @@
 		
 		public function hash (Deck $cards)
 		{
-			return $this->hashArray($cards);
-		}
-		
-		
-		public function hashArray ($cards)
-		{
 			$sequenceString = '';
 			
 			foreach ($cards as $card) {
