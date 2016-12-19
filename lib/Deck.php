@@ -71,13 +71,21 @@
 		}
 		
 		
-		public function getRotatedHash ()
+		public function rotateTo ($firstValue)
 		{
-			if ($this->unorderedHash) {
-				return $this->unorderedHash;
+			$array = $this->cards;
+			$key = array_search($firstValue, $array);
+			
+			if ($key === false) {
+				throw new Exception('Rotate value ' . $firstValue . ' not found.');
 			}
 			
-			return $this->unorderedHash = $this->hasher->hashRotated($this);
+			for ($i = 0; $i < $key; $i++) {
+				$value = array_shift($array);
+				array_push($array, $value);
+			}
+			
+			return new self($array, $this->hasher);
 		}
 		
 		

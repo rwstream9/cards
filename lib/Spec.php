@@ -28,7 +28,7 @@
 			$this->createSuitSymbolIndex();
 			$this->createSuitValueIndex();
 			
-			$this->deckHasher = $deckHasher ?: new DeckHasher($this);
+			$this->deckHasher = $deckHasher ?: new DeckHasher;
 		}
 		
 		
